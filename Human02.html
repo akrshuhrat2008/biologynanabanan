@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Эволюция Человека - Интерактивная Презентация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        /* Навигация по периодам */
+        .period-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .period-btn {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #667eea;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .period-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: #667eea;
+            color: white;
+        }
+
+        .period-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Контент периодов */
+        .period-content {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .period-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .period-title {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .species-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .species-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+        }
+
+        .species-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .species-name {
+            font-size: 1.4em;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .species-time {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .species-description {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .species-features {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .feature-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .feature-item {
+            padding: 5px 0;
+            color: #666;
+            font-size: 0.9em;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .feature-item::before {
+            content: '●';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+        }
+
+        .branch-tag {
+            display: inline-block;
+            background: #4ecdc4;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .branch-tag.extinct {
+            background: #e74c3c;
+        }
+
+        .branch-tag.current {
+            background: #27ae60;
+        }
+
+        /* Временная линия в шапке каждого периода */
+        .timeline-header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .timeline-years {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        /* Сводка */
+        .summary-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .summary-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .species-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .period-nav {
+                flex-direction: column;
+            }
+        }
+
+        .intro-text {
+            text-align: center;
+            color: #555;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧬 Эволюция Человека</h1>
+            <p class="subtitle">Интерактивное путешествие сквозь 7 миллионов лет</p>
+            <p class="intro-text">
+                Эволюция человека — это длительный процесс развития от древнейших предков до современного Homo sapiens. 
+                Начался около 7 млн лет назад в Африке. Выберите период, чтобы узнать больше!
+            </p>
+        </header>
+
+        <div class="period-nav">
+            <button class="period-btn active" onclick="showPeriod('early')">
+                Ранние гоминиды<br><small>7-4 млн лет назад</small>
+            </button>
+            <button class="period-btn" onclick="showPeriod('australo')">
+                Австралопитеки<br><small>4-2 млн лет назад</small>
+            </button>
+            <button class="period-btn" onclick="showPeriod('early-homo')">
+                Ранний Homo<br><small>2.8-0.7 млн лет назад</small>
+            </button>
+            <button class="period-btn" onclick="showPeriod('archaic')">
+                Архаичные люди<br><small>700-40 тыс. лет назад</small>
+            </button>
+            <button class="period-btn" onclick="showPeriod('modern')">
+                Современный человек<br><small>300 тыс. лет - сейчас</small>
+            </button>
+        </div>
+
+        <!-- РАННИЕ ГОМИНИДЫ -->
+        <div id="early" class="period-content active">
+            <div class="timeline-header">
+                <div class="timeline-years">7 - 4 млн лет назад</div>
+                <div>Миоцен - Ранний Плиоцен</div>
+            </div>
+            
+            <h2 class="period-title">Ранние гоминиды: Начало пути</h2>
+            
+            <div class="summary-box">
+                <div class="summary-title">Ключевые особенности периода:</div>
+                <div class="feature-item">Первые признаки прямохождения (бипедализма)</div>
+                <div class="feature-item">Отделение от общего предка с шимпанзе (~6-7 млн лет назад)</div>
+                <div class="feature-item">Небольшой мозг (300-400 см³), схожий с обезьянами</div>
+                <div class="feature-item">Жили в лесах и саваннах Африки</div>
+                <div class="feature-item">Комбинация древесного образа жизни и хождения на двух ногах</div>
+            </div>
+
+            <div class="species-grid">
+                <div class="species-card">
+                    <div class="species-name">Sahelanthropus tchadensis</div>
+                    <span class="species-time">7-6 млн лет назад</span>
+                    <p class="species-description">
+                        Древнейший возможный предок человека. Найден в Чаде в 2001 году. Имел черты и обезьян, и людей. 
+                        Прямохождение остается предметом дебатов среди ученых.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Объем мозга: ~365 см³</div>
+                        <div class="feature-item">Маленькие клыки (как у человека)</div>
+                        <div class="feature-item">Отверстие черепа внизу (признак бипедализма)</div>
+                        <div class="feature-item">Обитал в лесистых саваннах</div>
+                    </div>
+                    <span class="branch-tag">Ранние гоминиды</span>
+                </div>
+
+                <div class="species-card">
+                    <div class="species-name">Orrorin tugenensis</div>
+                    <span class="species-time">6 млн лет назад</span>
+                    <p class="species-description">
+                        "Человек тысячелетия". Найден в Кении в 2000 году. Строение бедренной кости четко указывает 
+                        на прямохождение, но также мог лазать по деревьям.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Бипедализм подтвержден по костям ног</div>
+                        <div class="feature-item">Размером с шимпанзе</div>
+                        <div class="feature-item">Жил в лесистой местности</div>
+                        <div class="feature-item">Питался фруктами и растениями</div>
+                    </div>
+                    <span class="branch-tag">Ранние гоминиды</span>
+                </div>
+
+                <div class="species-card">
+                    <div class="species-name">Ardipithecus ramidus</div>
+                    <span class="species-time">4.4 млн лет назад</span>
+                    <p class="species-description">
+                        "Арди" — важнейшая находка для понимания эволюции. Открыт в 1990-х в Эфиопии. 
+                        Показывает переход от древесного образа жизни к наземному.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Объем мозга: 300-350 см³</div>
+                        <div class="feature-item">Рост: около 120 см, вес ~50 кг</div>
+                        <div class="feature-item">Хватательная стопа для лазанья</div>
+                        <div class="feature-item">Прямохождение на земле</div>
+                        <div class="feature-item">Жил в лесах (не в саванне!)</div>
+                    </div>
+                    <span class="branch-tag">Переход к австралопитекам</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- АВСТРАЛОПИТЕКИ -->
+        <div id="australo" class="period-content">
+            <div class="timeline-header">
+                <div class="timeline-years">4 - 2 млн лет назад</div>
+                <div>Плиоцен</div>
+            </div>
+            
+            <h2 class="period-title">Австралопитеки: Прямоходящие обезьяны</h2>
+            
+            <div class="summary-box">
+                <div class="summary-title">Ключевые особенности периода:</div>
+                <div class="feature-item">Уверенное прямохождение (основной способ передвижения)</div>
+                <div class="feature-item">Мозг всё ещё небольшой (380-500 см³)</div>
+                <div class="feature-item">Жили в саваннах и открытых местностях</div>
+                <div class="feature-item">Разделение на грацильных и массивных форм</div>
+                <div class="feature-item">Начало использования простейших орудий (камни, палки)</div>
+            </div>
+
+            <div class="species-grid">
+                <div class="species-card">
+                    <div class="species-name">Australopithecus afarensis</div>
+                    <span class="species-time">3.9-2.9 млн лет назад</span>
+                    <p class="species-description">
+                        "Люси" — самый знаменитый представитель. Найдена в Эфиопии в 1974 году. 
+                        Уверенно ходила на двух ногах, но сохранила способность лазать по деревьям.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Объем мозга: 380-430 см³</div>
+                        <div class="feature-item">Рост: 105-150 см (самки меньше)</div>
+                        <div class="feature-item">Полностью прямохождение</div>
+                        <div class="feature-item">Сильный половой диморфизм</div>
+                        <div class="feature-item">Длинные руки (остатки древесного образа)</div>
+                    </div>
+                    <span class="branch-tag">Грацильные австралопитеки</span>
+                </div>
+
+                <div class="species-card">
+                    <div class="species-name">Australopithecus africanus</div>
+                    <span class="species-time">3.3-2.1 млн лет назад</span>
+                    <p class="species-description">
+                        Найден в Южной Африке. Более округлый череп и немного больший мозг по сравнению с A. afarensis. 
+                        Возможно, использовал костяные орудия.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Объем мозга: 400-500 см³</div>
+                        <div class="feature-item">Рост: 110-140 см</div>
+                        <div class="feature-item">Более округлый череп</div>
+                        <div class="feature-item">Всеядный (включая мясо)</div>
+                        <div class="feature-item">Меньший половой диморфизм</div>
+                    </div>
+                    <span class="branch-tag">Грацильные австралопитеки</span>
+                </div>
+
+                <div class="species-card">
+                    <div class="species-name">Paranthropus (массивные)</div>
+                    <span class="species-time">2.7-1.2 млн лет назад</span>
+                    <p class="species-description">
+                        Боковая ветвь эволюции. Включает P. robustus, P. boisei, P. aethiopicus. 
+                        Специализировались на жёсткой растительной пище. Вымерли, не оставив потомков.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Мощные челюсти и огромные зубы</div>
+                        <div class="feature-item">Сагиттальный гребень на черепе</div>
+                        <div class="feature-item">Питались семенами, корнями, травой</div>
+                        <div class="feature-item">Мозг 500-550 см³</div>
+                    </div>
+                    <span class="branch-tag extinct">ТУПИКОВАЯ ВЕТВЬ</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- РАННИЙ HOMO -->
+        <div id="early-homo" class="period-content">
+            <div class="timeline-header">
+                <div class="timeline-years">2.8 млн - 700 тыс. лет назад</div>
+                <div>Ранний и Средний Плейстоцен</div>
+            </div>
+            
+            <h2 class="period-title">Ранний Homo: Рождение человечества</h2>
+            
+            <div class="summary-box">
+                <div class="summary-title">Ключевые особенности периода:</div>
+                <div class="feature-item">Увеличение объема мозга (до 600-1200 см³)</div>
+                <div class="feature-item">Изготовление каменных орудий (олдувайская и ашёльская культуры)</div>
+                <div class="feature-item">Первый выход за пределы Африки (~1.8 млн лет назад)</div>
+                <div class="feature-item">Освоение огня (~800 тыс. лет назад)</div>
+                <div class="feature-item">Охота на крупных животных</div>
+            </div>
+
+            <div class="species-grid">
+                <div class="species-card">
+                    <div class="species-name">Homo habilis</div>
+                    <span class="species-time">2.4-1.4 млн лет назад</span>
+                    <p class="species-description">
+                        "Человек умелый" — первый представитель рода Homo. Создавал примитивные каменные орудия. 
+                        Переломный момент в эволюции: начало технологической революции.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Объем мозга: 500-800 см³</div>
+                        <div class="feature-item">Рост: 100-135 см</div>
+                        <div class="feature-item">Изготовление олдувайских орудий</div>
+                        <div class="feature-item">Всеядный, активный сборщик</div>
+                        <div class="feature-item">Жил только в Африке</div>
+                    </div>
+                    <span class="branch-tag">Род Homo — начало</span>
+                </div>
+
+                <div class="species-card">
+                    <div class="species-name">Homo erectus</div>
+                    <span class="species-time">1.9 млн - 110 тыс. лет назад</span>
+                    <p class="species-description">
+                        "Человек прямоходящий" — самый успешный вид древних людей. Первым покинул Африку, 
+                        освоил огонь, создал ашёльские рубила. Прямой предок современного человека.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Объем мозга: 900-1200 см³</div>
+                        <div class="feature-item">Рост: 145-185 см (как у нас!)</div>
+                        <div class="feature-item">Использование огня (~780-1500 тыс. лет назад)</div>
+                        <div class="feature-item">Ашёльские каменные орудия</div>
+                        <div class="feature-item">Расселился по Африке, Азии, Европе</div>
+                        <div class="feature-item">Охотник и собиратель</div>
+                    </div>
+                    <span class="branch-tag">Род Homo — расселение</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- АРХАИЧНЫЕ ЛЮДИ -->
+        <div id="archaic" class="period-content">
+            <div class="timeline-header">
+                <div class="timeline-years">700 000 - 40 000 лет назад</div>
+                <div>Средний Плейстоцен</div>
+            </div>
+            
+            <h2 class="period-title">Архаичные люди: Расцвет разнообразия</h2>
+            
+            <div class="summary-box">
+                <div class="summary-title">Ключевые особенности периода:</div>
+                <div class="feature-item">Большой мозг (1100-1750 см³) — как у современного человека!</div>
+                <div class="feature-item">Сложная социальная организация</div>
+                <div class="feature-item">Развитие культуры: погребения, искусство, символизм</div>
+                <div class="feature-item">Несколько видов людей сосуществовали на планете</div>
+                <div class="feature-item">Скрещивание между разными видами Homo</div>
+            </div>
+
+            <div class="species-grid">
+                <div class="species-card">
+                    <div class="species-name">Homo heidelbergensis</div>
+                    <span class="species-time">700-200 тыс. лет назад</span>
+                    <p class="species-description">
+                        Гейдельбергский человек — общий предок неандертальцев, денисовцев и современных людей. 
+                        Строил укрытия, охотился на крупную дичь, возможно имел зачатки речи.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Объем мозга: 1100-1400 см³</div>
+                        <div class="feature-item">Рост: около 175 см</div>
+                        <div class="feature-item">Развитые каменные орудия</div>
+                        <div class="feature-item">Коллективная охота</div>
+                        <div class="feature-item">Забота о больных</div>
+                    </div>
+                    <span class="branch-tag">Предок современных форм</span>
+                </div>
+
+                <div class="species-card">
+                    <div class="species-name">Homo neanderthalensis</div>
+                    <span class="species-time">400-40 тыс. лет назад</span>
+                    <p class="species-description">
+                        Неандертальцы — наши близкие родственники. Жили в Европе и Азии, адаптированы к холодному климату. 
+                        Хоронили мертвых, создавали украшения, скрещивались с Homo sapiens.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Объем мозга: 1200-1750 см³ (больше нашего!)</div>
+                        <div class="feature-item">Коренастое, мускулистое телосложение</div>
+                        <div class="feature-item">Мустьерская культура</div>
+                        <div class="feature-item">Погребения, возможно религия</div>
+                        <div class="feature-item">2-4% ДНК в современных неафриканцах</div>
+                    </div>
+                    <span class="branch-tag extinct">Параллельная ветвь (вымерла)</span>
+                </div>
+
+                <div class="species-card">
+                    <div class="species-name">Денисовский человек</div>
+                    <span class="species-time">300-50 тыс. лет назад</span>
+                    <p class="species-description">
+                        Открыт по ДНК в 2010 году в Денисовой пещере (Алтай). Обитал в Азии. 
+                        Родственны неандертальцам. Скрещивались с предками меланезийцев и австралийцев.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Известен в основном по ДНК</div>
+                        <div class="feature-item">Жили в Азии (Сибирь, Тибет)</div>
+                        <div class="feature-item">До 5% ДНК в меланезийцах</div>
+                        <div class="feature-item">Адаптация к высокогорью</div>
+                        <div class="feature-item">Скрещивались с H. sapiens и неандертальцами</div>
+                    </div>
+                    <span class="branch-tag extinct">Параллельная ветвь (вымерла)</span>
+                </div>
+
+                <div class="species-card">
+                    <div class="species-name">Homo floresiensis</div>
+                    <span class="species-time">100-50 тыс. лет назад</span>
+                    <p class="species-description">
+                        "Хоббит" — карликовый вид человека с острова Флорес (Индонезия). 
+                        Пример островной карликовости. Жил одновременно с современными людьми!
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Объем мозга: всего 380 см³</div>
+                        <div class="feature-item">Рост: около 1 метра, вес ~25 кг</div>
+                        <div class="feature-item">Использовал каменные орудия</div>
+                        <div class="feature-item">Охотился на карликовых слонов</div>
+                        <div class="feature-item">Изолированная островная популяция</div>
+                    </div>
+                    <span class="branch-tag extinct">Изолированная ветвь (вымерла)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- СОВРЕМЕННЫЙ ЧЕЛОВЕК -->
+        <div id="modern" class="period-content">
+            <div class="timeline-header">
+                <div class="timeline-years">300 000 лет назад - настоящее время</div>
+                <div>Поздний Плейстоцен - Голоцен</div>
+            </div>
+            
+            <h2 class="period-title">Homo sapiens: Триумф человека разумного</h2>
+            
+            <div class="summary-box">
+                <div class="summary-title">Ключевые особенности периода:</div>
+                <div class="feature-item">Возникновение в Африке около 300 тыс. лет назад</div>
+                <div class="feature-item">Расселение по всему миру (~70-100 тыс. лет назад)</div>
+                <div class="feature-item">Развитая речь и символическое мышление</div>
+                <div class="feature-item">Искусство, религия, сложные технологии</div>
+                <div class="feature-item">Единственный выживший вид людей</div>
+            </div>
+
+            <div class="species-grid">
+                <div class="species-card">
+                    <div class="species-name">Homo sapiens</div>
+                    <span class="species-time">300 тыс. лет назад - сейчас</span>
+                    <p class="species-description">
+                        Мы! Человек разумный. Возник в Африке, расселился по всей планете, 
+                        создал цивилизацию и доминирует на Земле. Единственный выживший вид рода Homo.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Основные характеристики:</div>
+                        <div class="feature-item">Объем мозга: 1300-1500 см³</div>
+                        <div class="feature-item">Высокий округлый череп, развитый подбородок</div>
+                        <div class="feature-item">Сложная речь и язык</div>
+                        <div class="feature-item">Символическое мышление, абстракция</div>
+                        <div class="feature-item">Искусство с 40 тыс. лет назад</div>
+                        <div class="feature-item">Земледелие с 10 тыс. лет назад</div>
+                        <div class="feature-item">Наука, технологии, космос</div>
+                    </div>
+                    <span class="branch-tag current">Единственный выживший вид ✓</span>
+                </div>
+
+                <div class="species-card">
+                    <div class="species-name">Миграция из Африки</div>
+                    <span class="species-time">70-100 тыс. лет назад</span>
+                    <p class="species-description">
+                        Небольшая группа Homo sapiens покинула Африку и постепенно заселила всю планету. 
+                        Все современные люди за пределами Африки произошли от этой группы.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Хронология расселения:</div>
+                        <div class="feature-item">Ближний Восток: ~100-70 тыс. лет назад</div>
+                        <div class="feature-item">Азия: ~70-50 тыс. лет назад</div>
+                        <div class="feature-item">Европа: ~45-40 тыс. лет назад</div>
+                        <div class="feature-item">Австралия: ~65-50 тыс. лет назад</div>
+                        <div class="feature-item">Америка: ~15-20 тыс. лет назад</div>
+                    </div>
+                    <span class="branch-tag current">Глобальная экспансия</span>
+                </div>
+
+                <div class="species-card">
+                    <div class="species-name">Культурная революция</div>
+                    <span class="species-time">40-10 тыс. лет назад</span>
+                    <p class="species-description">
+                        Взрыв культуры и технологий: наскальное искусство, скульптуры, музыкальные инструменты, 
+                        сложные орудия, одежда, жилища. Начало современного человеческого поведения.
+                    </p>
+                    <div class="species-features">
+                        <div class="feature-title">Достижения:</div>
+                        <div class="feature-item">Пещерная живопись (Ласко, Альтамира)</div>
+                        <div class="feature-item">Статуэтки Венер</div>
+                        <div class="feature-item">Флейты из костей</div>
+                        <div class="feature-item">Сложные каменные и костяные орудия</div>
+                        <div class="feature-item">Погребальные ритуалы</div>
+                    </div>
+                    <span class="branch-tag current">Культурный взрыв</span>
+                </div>
+            </div>
+
+            <div class="summary-box" style="margin-top: 40px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                <div class="summary-title">🧬 Генетическое наследие:</div>
+                <div class="feature-item">Все современные люди имеют африканское происхождение</div>
+                <div class="feature-item">Неафриканцы несут 2-4% ДНК неандертальцев</div>
+                <div class="feature-item">Меланезийцы и австралийцы имеют до 5% ДНК денисовцев</div>
+                <div class="feature-item">Скрещивание между видами Homo было обычным явлением</div>
+                <div class="feature-item">Мы — гибридный вид, впитавший гены нескольких древних популяций</div>
+            </div>
+        </div>
+
+        <!-- Финальная сводка -->
+        <div style="background: white; border-radius: 20px; padding: 40px; margin-top: 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);">
+            <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">Ключевые факторы эволюции человека</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; border-left: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">🚶 Прямохождение</h3>
+                    <p style="color: #666;">Началось ~7 млн лет назад. Освободило руки для использования орудий и переноса предметов.</p>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; border-left: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">🧠 Увеличение мозга</h3>
+                    <p style="color: #666;">От 350 см³ до 1400 см³ за 7 млн лет. Ключ к интеллекту и культуре.</p>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; border-left: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">🔨 Орудия труда</h3>
+                    <p style="color: #666;">Началось 2.4 млн лет назад с Homo habilis. От простых камней до сложных технологий.</p>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; border-left: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">🔥 Огонь</h3>
+                    <p style="color: #666;">Освоен около 800 тыс. лет назад. Позволил готовить пищу, согреваться, защищаться.</p>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; border-left: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">💬 Язык и речь</h3>
+                    <p style="color: #666;">Развился у Homo sapiens (последние 300 тыс. лет). Основа культуры и передачи знаний.</p>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; border-left: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">👥 Социальность</h3>
+                    <p style="color: #666;">Кооперация, разделение труда, забота о слабых. Наша главная сила.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPeriod(periodId) {
+            // Скрыть все периоды
+            const allPeriods = document.querySelectorAll('.period-content');
+            allPeriods.forEach(period => {
+                period.classList.remove('active');
+            });
+
+            // Убрать активный класс у всех кнопок
+            const allButtons = document.querySelectorAll('.period-btn');
+            allButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Показать выбранный период
+            document.getElementById(periodId).classList.add('active');
+
+            // Активировать нажатую кнопку
+            event.target.closest('.period-btn').classList.add('active');
+
+            // Прокрутить вверх
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
